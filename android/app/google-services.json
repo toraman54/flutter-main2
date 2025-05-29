@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640790442411",
+    "project_id": "erdem-5e13c",
+    "storage_bucket": "erdem-5e13c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640790442411:android:5b43449119e8631bd522ee",
+        "android_client_info": {
+          "package_name": "com.erdemakdag.flutter_firebase_dersleri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_j1UJ8hhquMm-VNjWsgwbO5CcLCyrZww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
