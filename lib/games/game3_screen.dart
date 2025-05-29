@@ -9,7 +9,6 @@ class Game3Screen extends StatefulWidget {
 }
 
 class _Game3ScreenState extends State<Game3Screen> {
-  // Zorluklara göre cümleler (boşluklar ___ ile gösterildi)
   final Map<String, List<String>> _sentencesByDifficulty = {
     'Easy': [
       'She ____ (to be) happy.',
@@ -31,7 +30,6 @@ class _Game3ScreenState extends State<Game3Screen> {
     ],
   };
 
-  // Doğru cevaplar — boşlukları dolduracak kelimeler (fiilin doğru hali)
   final Map<String, List<String>> _answersByDifficulty = {
     'Easy': ['is', 'have', 'go', 'likes'],
     'Medium': ['am', 'visited', 'does not like', 'were playing'],
@@ -40,24 +38,27 @@ class _Game3ScreenState extends State<Game3Screen> {
 
   String _selectedDifficulty = 'Easy';
   int _currentSentenceIndex = 0;
-  String _userInput = '';
   Timer? _timer;
   int _timeLeft = 30;
   int _score = 0;
   bool _isAnswered = false;
 
-  String _hintText = ''; // İpucu harfleri
-  int _hintIndex = 0; // Kaç harf gösterildi
+  String _hintText = '';
+  int _hintIndex = 0;
+
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = TextEditingController();
     _startNewGame();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -68,7 +69,7 @@ class _Game3ScreenState extends State<Game3Screen> {
       _score = 0;
       _isAnswered = false;
       _timeLeft = 30;
-      _userInput = '';
+      _controller.text = '';
       _hintText = '';
       _hintIndex = 0;
     });
@@ -95,7 +96,7 @@ class _Game3ScreenState extends State<Game3Screen> {
         _answersByDifficulty[_selectedDifficulty]![_currentSentenceIndex]
             .toLowerCase()
             .trim();
-    final userAnswer = _userInput.toLowerCase().trim();
+    final userAnswer = _controller.text.toLowerCase().trim();
 
     setState(() {
       _isAnswered = true;
@@ -109,7 +110,7 @@ class _Game3ScreenState extends State<Game3Screen> {
     _timer?.cancel();
     setState(() {
       _isAnswered = true;
-      _userInput =
+      _controller.text =
           _answersByDifficulty[_selectedDifficulty]![_currentSentenceIndex];
     });
   }
@@ -119,7 +120,7 @@ class _Game3ScreenState extends State<Game3Screen> {
         _sentencesByDifficulty[_selectedDifficulty]!.length) {
       setState(() {
         _currentSentenceIndex++;
-        _userInput = '';
+        _controller.text = '';
         _isAnswered = false;
         _timeLeft = 30;
         _hintText = '';
@@ -156,7 +157,6 @@ class _Game3ScreenState extends State<Game3Screen> {
     if (_isAnswered) return;
     final correctAnswer =
         _answersByDifficulty[_selectedDifficulty]![_currentSentenceIndex];
-
     if (_hintIndex < correctAnswer.length) {
       setState(() {
         _hintText += correctAnswer[_hintIndex];
@@ -215,14 +215,11 @@ class _Game3ScreenState extends State<Game3Screen> {
             const SizedBox(height: 20),
             TextField(
               enabled: !_isAnswered,
+              controller: _controller,
               decoration: const InputDecoration(
                 labelText: 'Fill in the blank (grammatically correct form)',
                 border: OutlineInputBorder(),
               ),
-              controller: TextEditingController(text: _userInput),
-              onChanged: (value) {
-                _userInput = value;
-              },
             ),
             const SizedBox(height: 10),
             Row(
@@ -246,7 +243,7 @@ class _Game3ScreenState extends State<Game3Screen> {
               Column(
                 children: [
                   Text(
-                    _userInput.toLowerCase().trim() ==
+                    _controller.text.toLowerCase().trim() ==
                             _answersByDifficulty[_selectedDifficulty]![_currentSentenceIndex]
                                 .toLowerCase()
                         ? 'Correct!'
@@ -255,7 +252,7 @@ class _Game3ScreenState extends State<Game3Screen> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color:
-                          _userInput.toLowerCase().trim() ==
+                          _controller.text.toLowerCase().trim() ==
                                   _answersByDifficulty[_selectedDifficulty]![_currentSentenceIndex]
                                       .toLowerCase()
                               ? Colors.green
